@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8689641406802276"
-     crossorigin="anonymous"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8689641406802276" crossorigin="anonymous"></script>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <title>TEXTAPOCALYPSE</title>
@@ -673,7 +672,7 @@ function showTutorial(){
 /* ============================== GAME SCREEN ============================== */
 function renderGame(){
   root.innerHTML = `
-    <div class="w-full min-h-screen flex flex-col">
+    <div class="w-full flex flex-col" style="height:100dvh; max-height:100dvh; overflow:hidden;">
 
       <!-- TOP: compact single-row status bar -->
       <div id="status-bar" class="hud-panel clip-corner-sm px-2 py-1.5 flex items-center justify-between gap-1.5 text-[10px] shrink-0 z-20 mt-1">
@@ -715,7 +714,7 @@ function renderGame(){
       <div id="overdrive-ready-msg" class="text-[9px] text-[var(--purple)] text-center pulse-glow hidden mb-1">READY — PRESS TAB / ENTER</div>
 
       <!-- CENTER: game board -->
-      <div id="canvas-wrap" class="relative overflow-hidden flex-1 w-full max-w-[360px] mx-auto border border-[var(--green-dim)] clip-corner-sm" style="min-height: 300px;">
+      <div id="canvas-wrap" class="relative overflow-hidden flex-1 w-full max-w-[360px] mx-auto border border-[var(--green-dim)] clip-corner-sm" style="min-height: 0; flex-basis: 0;">
         <canvas id="game-canvas" class="absolute inset-0 w-full h-full"></canvas>
         <div class="scanline-overlay"></div>
         <div class="vignette"></div>
@@ -725,7 +724,7 @@ function renderGame(){
       </div>
 
       <!-- BOTTOM: input bar + instructions -->
-      <div class="shrink-0 py-2 px-1">
+      <div class="shrink-0 py-1.5 px-1">
         <div id="input-bar" class="relative flex items-center gap-2 px-3 py-2.5 clip-corner-sm border-2 border-[var(--green)] bg-black/60 transition-colors w-full max-w-[360px] mx-auto">
           <span class="text-[var(--cyan)] text-[11px] tracking-widest">&gt;</span>
           <span class="font-mono text-sm flex-1 min-h-[22px] truncate">
@@ -733,9 +732,10 @@ function renderGame(){
             <span id="remainder-display" class="text-gray-500"></span>
             <span class="terminal-cursor"></span>
           </span>
-          <span id="locked-badge" class="text-[8px] text-[var(--cyan)] tracking-widest border border-[var(--cyan)]/50 px-1.5 py-0.5 hidden shrink-0">LOCK</span>
+          <span id="locked-badge" class="text-[8px] text-[var(--cyan)] tracking-widest border border-[var(--cyan)]/50 px-1.5 py-0.5 shrink-0" style="visibility:hidden;">LOCK</span>
+          <input id="mobile-kb-input" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" inputmode="text" style="position:absolute; inset:0; opacity:0; border:0; outline:none; padding:0; margin:0; font-size:16px; background:transparent; -webkit-appearance:none;" />
         </div>
-        <p class="text-center text-[8px] text-[var(--text-dim)] mt-1.5 tracking-widest px-2 leading-relaxed">JUST TYPE — TARGETING AUTOMATIC · TAB/ENTER = OVERDRIVE</p>
+        <p class="text-center text-[8px] text-[var(--text-dim)] mt-1 tracking-widest px-2 leading-relaxed">JUST TYPE — TARGETING AUTOMATIC · TAB/ENTER = OVERDRIVE</p>
       </div>
     </div>
   `;
@@ -860,26 +860,23 @@ function renderGame(){
     if(idx!==-1) state.enemies.splice(idx,1);
   }
 
-  function handleKeyDown(e){
-    if(document.getElementById('ad-modal-mount')) return; // modal open — ignore game input
-    if(e.key === 'Tab' || e.key === 'Enter'){
-      e.preventDefault();
-      if(state.overdriveMeter >= 100 && !state.overdriveActive){
-        state.overdriveActive = true;
-        state.overdriveTime = 8000;
-        state.overdriveMeter = 0;
-        sound.overdrive();
-        pushLog('[SYSTEM]: OVERDRIVE ENGAGED', 'overdrive');
-        triggerShake(14);
-      }
-      return;
+  function triggerOverdrive(){
+    if(state.overdriveMeter >= 100 && !state.overdriveActive){
+      state.overdriveActive = true;
+      state.overdriveTime = 8000;
+      state.overdriveMeter = 0;
+      sound.overdrive();
+      pushLog('[SYSTEM]: OVERDRIVE ENGAGED', 'overdrive');
+      triggerShake(14);
     }
-    if(e.key.length !== 1) return;
-    if(!/^[a-zA-Z]$/.test(e.key)) return;
+  }
 
-    e.preventDefault();
+  function processKey(rawKey){
+    if(document.getElementById('ad-modal-mount')) return; // modal open — ignore game input
+    if(!/^[a-zA-Z]$/.test(rawKey)) return;
+
     sound.ensure();
-    const key = e.key.toLowerCase();
+    const key = rawKey.toLowerCase();
     state.totalKeys += 1;
 
     let locked = state.lockedId != null ? state.enemies.find(en => en.id === state.lockedId) : null;
@@ -921,6 +918,50 @@ function renderGame(){
         state.inputFlash = 10;
       }
     }
+  }
+
+  function handleKeyDown(e){
+    if(document.getElementById('ad-modal-mount')) return; // modal open — ignore game input
+    if(e.key === 'Tab' || e.key === 'Enter'){
+      e.preventDefault();
+      triggerOverdrive();
+      return;
+    }
+    if(e.key.length !== 1) return;
+    if(!/^[a-zA-Z]$/.test(e.key)) return;
+    e.preventDefault();
+    processKey(e.key);
+  }
+
+  /* ---------- mobile virtual keyboard support ---------- */
+  const mobileInput = document.getElementById('mobile-kb-input');
+  if(mobileInput){
+    mobileInput.addEventListener('input', ()=>{
+      const val = mobileInput.value;
+      if(val.length > 0){
+        // process every character typed (handles fast/composed input)
+        for(const ch of val){
+          processKey(ch);
+        }
+      }
+      mobileInput.value = '';
+    });
+    mobileInput.addEventListener('keydown', (e)=>{
+      if(e.key === 'Enter' || e.key === 'Tab' || e.key === 'Go' || e.key === 'Done'){
+        e.preventDefault();
+        triggerOverdrive();
+        mobileInput.value = '';
+      }
+    });
+    // Tapping anywhere in the game brings up the keyboard
+    const focusTargets = [document.getElementById('input-bar'), document.getElementById('canvas-wrap')];
+    focusTargets.forEach(el=>{
+      if(el){
+        el.addEventListener('click', ()=>{ mobileInput.focus(); });
+      }
+    });
+    // Auto-focus on entry so the keyboard is ready immediately
+    setTimeout(()=>{ mobileInput.focus(); }, 200);
   }
 
   /* ---------- lives display ---------- */
@@ -979,7 +1020,7 @@ function renderGame(){
     if(typedEl){
       typedEl.textContent = state.typed;
       remEl.textContent = lockedEn ? lockedEn.word.slice(state.typed.length) : '';
-      lockedBadge.classList.toggle('hidden', !lockedEn);
+      lockedBadge.style.visibility = lockedEn ? 'visible' : 'hidden';
     }
 
     const inputBar = document.getElementById('input-bar');
