@@ -1,0 +1,1367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>TEXTAPOCALYPSE</title>
+<!--
+  ============================================================
+  FULLY SELF-CONTAINED — single file, zero external dependencies.
+  No CDN scripts, no linked stylesheets, no Google Fonts.
+  Everything below is plain hand-written CSS/JS.
+  ============================================================
+-->
+<style>
+  /* ---- Preflight-lite (minimal reset) ---- */
+  *, *::before, *::after { box-sizing: border-box; border-width: 0; border-style: solid; border-color: #e5e7eb; }
+  html { line-height: 1.5; -webkit-text-size-adjust: 100%; }
+  body { margin: 0; line-height: inherit; }
+  h1, h2, h3, p { margin: 0; }
+  button { font-family: inherit; font-size: 100%; font-weight: inherit; line-height: inherit; color: inherit; margin: 0; padding: 0; background-color: transparent; background-image: none; cursor: pointer; }
+  button, [role="button"] { cursor: pointer; }
+  kbd { font-family: inherit; }
+
+  /* ---- Layout / display ---- */
+  .absolute { position: absolute; }
+  .fixed { position: fixed; }
+  .relative { position: relative; }
+  .inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
+  .top-2 { top: 0.5rem; }
+  .left-2 { left: 0.5rem; }
+  .right-2 { right: 0.5rem; }
+  .left-1\/2 { left: 50%; }
+  .-translate-x-1\/2 { transform: translateX(-50%); }
+  .z-10 { z-index: 10; }
+  .z-20 { z-index: 20; }
+  .z-30 { z-index: 30; }
+  .z-50 { z-index: 50; }
+  .z-60 { z-index: 60; }
+
+  .flex { display: flex; }
+  .grid { display: grid; }
+  .hidden { display: none; }
+  .flex-col { flex-direction: column; }
+  .flex-1 { flex: 1 1 0%; }
+  .shrink-0 { flex-shrink: 0; }
+  .items-center { align-items: center; }
+  .justify-center { justify-content: center; }
+  .justify-between { justify-content: space-between; }
+  .grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+  .overflow-hidden { overflow: hidden; }
+  .overflow-x-hidden { overflow-x: hidden; }
+  .overflow-y-auto { overflow-y: auto; }
+  .box-border { box-sizing: border-box; }
+
+  /* ---- Sizing ---- */
+  .w-full { width: 100%; }
+  .w-1\.5 { width: 0.375rem; }
+  .w-4 { width: 1rem; }
+  .h-full { height: 100%; }
+  .h-1\.5 { height: 0.375rem; }
+  .h-2\.5 { height: 0.625rem; }
+  .min-h-screen { min-height: 100vh; }
+  .min-h-\[22px\] { min-height: 22px; }
+  .max-h-\[90vh\] { max-height: 90vh; }
+  .max-w-sm { max-width: 24rem; }
+  .max-w-\[280px\] { max-width: 280px; }
+  .max-w-\[340px\] { max-width: 340px; }
+  .max-w-\[320px\] { max-width: 320px; }
+  .max-w-\[360px\] { max-width: 360px; }
+  .mx-auto { margin-left: auto; margin-right: auto; }
+
+  /* ---- Spacing: margin ---- */
+  .-mt-2 { margin-top: -0.5rem; }
+  .mt-1 { margin-top: 0.25rem; }
+  .mt-1\.5 { margin-top: 0.375rem; }
+  .mt-3 { margin-top: 0.75rem; }
+  .mt-4 { margin-top: 1rem; }
+  .mb-0\.5 { margin-bottom: 0.125rem; }
+  .mb-1 { margin-bottom: 0.25rem; }
+  .mb-2 { margin-bottom: 0.5rem; }
+  .mb-3 { margin-bottom: 0.75rem; }
+  .mb-4 { margin-bottom: 1rem; }
+  .mb-5 { margin-bottom: 1.25rem; }
+
+  /* ---- Spacing: padding ---- */
+  .p-2 { padding: 0.5rem; }
+  .p-3 { padding: 0.75rem; }
+  .p-4 { padding: 1rem; }
+  .p-5 { padding: 1.25rem; }
+  .pb-1 { padding-bottom: 0.25rem; }
+  .px-1 { padding-left: 0.25rem; padding-right: 0.25rem; }
+  .px-1\.5 { padding-left: 0.375rem; padding-right: 0.375rem; }
+  .px-2 { padding-left: 0.5rem; padding-right: 0.5rem; }
+  .px-2\.5 { padding-left: 0.625rem; padding-right: 0.625rem; }
+  .px-3 { padding-left: 0.75rem; padding-right: 0.75rem; }
+  .px-4 { padding-left: 1rem; padding-right: 1rem; }
+  .px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
+  .py-0\.5 { padding-top: 0.125rem; padding-bottom: 0.125rem; }
+  .py-1 { padding-top: 0.25rem; padding-bottom: 0.25rem; }
+  .py-1\.5 { padding-top: 0.375rem; padding-bottom: 0.375rem; }
+  .py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+  .py-2\.5 { padding-top: 0.625rem; padding-bottom: 0.625rem; }
+  .py-3 { padding-top: 0.75rem; padding-bottom: 0.75rem; }
+  .py-3\.5 { padding-top: 0.875rem; padding-bottom: 0.875rem; }
+  .py-6 { padding-top: 1.5rem; padding-bottom: 1.5rem; }
+
+  /* ---- Gap ---- */
+  .gap-0\.5 { gap: 0.125rem; }
+  .gap-1 { gap: 0.25rem; }
+  .gap-1\.5 { gap: 0.375rem; }
+  .gap-2 { gap: 0.5rem; }
+  .gap-2\.5 { gap: 0.625rem; }
+  .gap-5 { gap: 1.25rem; }
+  .space-y-3 > * + * { margin-top: 0.75rem; }
+
+  /* ---- Borders ---- */
+  .border { border-width: 1px; }
+  .border-2 { border-width: 2px; }
+  .border-white\/10 { border-color: rgba(255,255,255,0.1); }
+  .border-\[\#3a1a5c\] { border-color: #3a1a5c; }
+  .border-\[var\(--amber\)\] { border-color: var(--amber); }
+  .border-\[var\(--cyan\)\]\/50 { border-color: rgba(0,212,255,0.5); }
+  .border-\[var\(--green\)\] { border-color: var(--green); }
+  .border-\[var\(--green-dim\)\] { border-color: var(--green-dim); }
+  .border-\[var\(--purple\)\] { border-color: var(--purple); }
+  .border-\[var\(--text-dim\)\] { border-color: var(--text-dim); }
+  .rounded { border-radius: 0.25rem; }
+
+  .active\:border-\[var\(--amber\)\]:active { border-color: var(--amber); }
+  .active\:border-\[var\(--cyan\)\]:active { border-color: var(--cyan); }
+  .active\:border-white:active { border-color: #fff; }
+  .active\:text-\[var\(--amber\)\]:active { color: var(--amber); }
+  .active\:text-\[var\(--cyan\)\]:active { color: var(--cyan); }
+  .active\:text-\[var\(--green\)\]:active { color: var(--green); }
+  .active\:text-white:active { color: #fff; }
+
+  /* ---- Backgrounds ---- */
+  .bg-black { background-color: #000; }
+  .bg-black\/30 { background-color: rgba(0,0,0,0.3); }
+  .bg-black\/60 { background-color: rgba(0,0,0,0.6); }
+  .bg-black\/85 { background-color: rgba(0,0,0,0.85); }
+  .bg-black\/90 { background-color: rgba(0,0,0,0.9); }
+  .bg-\[var\(--cyan\)\] { background-color: var(--cyan); }
+  .bg-\[var\(--amber\)\]\/10 { background-color: rgba(255,184,0,0.1); }
+  .bg-\[var\(--purple\)\]\/20 { background-color: rgba(176,38,255,0.2); }
+  .bg-\[var\(--red\)\] { background-color: var(--red); }
+  .bg-\[var\(--red\)\]\/10 { background-color: rgba(255,31,75,0.1); }
+  .bg-\[var\(--void\)\] { background-color: var(--void); }
+  .backdrop-blur-sm { backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
+
+  .bg-gradient-to-b { background-image: linear-gradient(to bottom, var(--tw-gradient-stops)); }
+  .from-transparent { --tw-gradient-from: transparent; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to); }
+  .from-\[var\(--red\)\]\/5 { --tw-gradient-from: rgba(255,31,75,0.05); --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to); }
+  .via-transparent { --tw-gradient-stops: var(--tw-gradient-from), transparent, var(--tw-gradient-to); }
+  .to-\[var\(--void\)\] { --tw-gradient-to: var(--void); }
+
+  /* ---- Typography ---- */
+  .font-black { font-weight: 900; }
+  .font-bold { font-weight: 700; }
+  .text-center { text-align: center; }
+  .text-right { text-align: right; }
+  .text-xs { font-size: 0.75rem; line-height: 1rem; }
+  .text-sm { font-size: 0.875rem; line-height: 1.25rem; }
+  .text-base { font-size: 1rem; line-height: 1.5rem; }
+  .text-lg { font-size: 1.125rem; line-height: 1.75rem; }
+  .text-xl { font-size: 1.25rem; line-height: 1.75rem; }
+  .text-2xl { font-size: 1.5rem; line-height: 2rem; }
+  .text-\[8px\] { font-size: 8px; }
+  .text-\[9px\] { font-size: 9px; }
+  .text-\[10px\] { font-size: 10px; }
+  .text-\[11px\] { font-size: 11px; }
+  .text-\[12px\] { font-size: 12px; }
+  .leading-none { line-height: 1; }
+  .leading-tight { line-height: 1.25; }
+  .leading-relaxed { line-height: 1.625; }
+  .tracking-tight { letter-spacing: -0.025em; }
+  .tracking-widest { letter-spacing: 0.1em; }
+  .tracking-\[0\.2em\] { letter-spacing: 0.2em; }
+  .tracking-\[0\.25em\] { letter-spacing: 0.25em; }
+  .tracking-\[0\.3em\] { letter-spacing: 0.3em; }
+  .whitespace-nowrap { white-space: nowrap; }
+  .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  .text-\[var\(--amber\)\] { color: var(--amber); }
+  .text-\[var\(--cyan\)\] { color: var(--cyan); }
+  .text-\[var\(--green\)\] { color: var(--green); }
+  .text-\[var\(--purple\)\] { color: var(--purple); }
+  .text-\[var\(--red\)\] { color: var(--red); }
+  .text-\[var\(--text-dim\)\] { color: var(--text-dim); }
+  .text-\[var\(--red\)\]\/30 { color: rgba(255,31,75,0.3); }
+  .text-gray-300 { color: #d1d5db; }
+  .text-gray-500 { color: #6b7280; }
+
+  /* ---- Transitions ---- */
+  .transition-all { transition-property: all; transition-timing-function: cubic-bezier(0.4,0,0.2,1); transition-duration: 150ms; }
+  .transition-colors { transition-property: color, background-color, border-color; transition-timing-function: cubic-bezier(0.4,0,0.2,1); transition-duration: 150ms; }
+  .duration-150 { transition-duration: 150ms; }
+
+  /* ---- Misc ---- */
+  .select-none { user-select: none; -webkit-user-select: none; }
+</style>
+<style>
+  /* ============================================================
+     FONT STACK — fully offline, zero network requests.
+     -----------------------------------------------------------
+     IMPORTANT: I don't have network access in this environment,
+     so I can't download the actual JetBrains Mono / Orbitron
+     font files for you. The stacks below use close-matching
+     system fonts as a safe fallback so the app NEVER breaks
+     offline or shows blank text while waiting on a network font.
+
+     TO USE THE REAL FONTS (recommended before Play Store release):
+     1. Download the .woff2 files from https://fonts.google.com
+        (JetBrains Mono + Orbitron, just the weights you use)
+     2. Put them in an /assets/fonts/ folder in your app
+     3. Replace the @font-face blocks below with:
+          @font-face {
+            font-family: 'JetBrains Mono';
+            src: url('assets/fonts/JetBrainsMono-Regular.woff2') format('woff2');
+            font-weight: 100 800;
+            font-display: swap;
+          }
+        (repeat for Orbitron, and for italic/bold weights you need)
+     4. Keep the .font-mono / .font-display rules as-is —
+        they already point at these family names.
+     ============================================================ */
+  .font-mono{
+    font-family: 'JetBrains Mono', 'SF Mono', 'Roboto Mono', 'Courier New', monospace;
+  }
+  .font-display{
+    font-family: 'Orbitron', 'Arial Narrow', 'Segoe UI', sans-serif;
+    letter-spacing: 0.02em;
+  }
+</style>
+<style>
+  :root{
+    --void: #04060a;
+    --panel: #070b12;
+    --grid: #0d1722;
+    --green: #00ff9f;
+    --green-dim: #0a4a39;
+    --amber: #ffb800;
+    --red: #ff1f4b;
+    --cyan: #00d4ff;
+    --purple: #b026ff;
+    --text-dim: #4c6b73;
+  }
+  html,body{ background:var(--void); margin:0; height:100%; }
+  *{ box-sizing:border-box; }
+  body{ font-family:'JetBrains Mono', 'SF Mono', 'Roboto Mono', 'Courier New', monospace; }
+
+  ::-webkit-scrollbar{ width:4px; height:4px; }
+  ::-webkit-scrollbar-track{ background:transparent; }
+  ::-webkit-scrollbar-thumb{ background:var(--green-dim); border-radius:2px; }
+
+  @keyframes scanlines {
+    0% { background-position: 0 0; }
+    100% { background-position: 0 4px; }
+  }
+  .scanline-overlay{
+    pointer-events:none;
+    position:absolute; inset:0;
+    background: repeating-linear-gradient(
+      to bottom,
+      rgba(0,255,159,0.035) 0px,
+      rgba(0,255,159,0.035) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+    mix-blend-mode: overlay;
+    animation: scanlines 0.2s linear infinite;
+    z-index:40;
+  }
+  .vignette{
+    pointer-events:none; position:absolute; inset:0; z-index:39;
+    background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.65) 100%);
+  }
+
+  @keyframes modal-pop {
+    0%{ opacity:0; transform: scale(0.92) translateY(8px); }
+    100%{ opacity:1; transform: scale(1) translateY(0); }
+  }
+  .ad-modal-pop{ animation: modal-pop 0.22s cubic-bezier(0.16,1,0.3,1); }
+
+  @keyframes flicker {
+    0%,100%{ opacity:1; }
+    92%{ opacity:1; }
+    93%{ opacity:0.4; }
+    94%{ opacity:1; }
+    96%{ opacity:0.6; }
+    97%{ opacity:1; }
+  }
+  .crt-flicker{ animation: flicker 6s infinite; }
+
+  @keyframes glitch-1 {
+    0%,100%{ clip-path: inset(0 0 0 0); transform:translate(0,0); }
+    20%{ clip-path: inset(20% 0 60% 0); transform:translate(-2px,0); }
+    40%{ clip-path: inset(60% 0 10% 0); transform:translate(2px,0); }
+    60%{ clip-path: inset(10% 0 70% 0); transform:translate(-1px,0); }
+    80%{ clip-path: inset(80% 0 5% 0); transform:translate(1px,0); }
+  }
+  @keyframes glitch-2 {
+    0%,100%{ clip-path: inset(0 0 0 0); transform:translate(0,0); }
+    20%{ clip-path: inset(70% 0 5% 0); transform:translate(2px,0); }
+    40%{ clip-path: inset(5% 0 80% 0); transform:translate(-2px,0); }
+    60%{ clip-path: inset(40% 0 30% 0); transform:translate(1px,0); }
+    80%{ clip-path: inset(15% 0 60% 0); transform:translate(-1px,0); }
+  }
+  .glitch-wrap{ position:relative; display:inline-block; }
+  .glitch-wrap .glitch-layer{
+    position:absolute; top:0; left:0; width:100%; height:100%;
+  }
+  .glitch-layer.c1{ color:var(--cyan); animation: glitch-1 2.6s infinite linear; opacity:0.7; }
+  .glitch-layer.c2{ color:var(--red); animation: glitch-2 3.1s infinite linear; opacity:0.7; }
+
+  @keyframes pulse-glow {
+    0%,100%{ filter: drop-shadow(0 0 5px currentColor); }
+    50%{ filter: drop-shadow(0 0 14px currentColor); }
+  }
+  .pulse-glow{ animation: pulse-glow 1.4s ease-in-out infinite; }
+
+  @keyframes blink-red {
+    0%,100%{ opacity:1; }
+    50%{ opacity:0.25; }
+  }
+  .blink-red{ animation: blink-red 0.45s steps(2,start) infinite; }
+
+  @keyframes border-flash {
+    0%,100%{ box-shadow: inset 0 0 0px rgba(255,31,75,0); border-color: rgba(255,31,75,0.3); }
+    50%{ box-shadow: inset 0 0 40px rgba(255,31,75,0.5); border-color: rgba(255,31,75,1); }
+  }
+  .flash-red{ animation: border-flash 0.15s ease-out 2; }
+
+  .clip-corner{
+    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+  }
+  .clip-corner-sm{
+    clip-path: polygon(0 0, calc(100% - 5px) 0, 100% 5px, 100% 100%, 5px 100%, 0 calc(100% - 5px));
+  }
+
+  .hud-panel{
+    background: linear-gradient(180deg, rgba(7,11,18,0.96) 0%, rgba(4,6,10,0.98) 100%);
+    border: 1px solid rgba(0,255,159,0.18);
+    position: relative;
+  }
+  .hud-panel::before{
+    content:'';
+    position:absolute; top:0; left:0; right:0; height:1px;
+    background: linear-gradient(90deg, transparent, var(--green), transparent);
+    opacity:0.6;
+  }
+
+  .data-row{
+    display:flex; justify-content:space-between; align-items:baseline;
+    border-bottom: 1px dashed rgba(76,107,115,0.25);
+    padding: 2px 0;
+  }
+
+  .terminal-cursor::after{
+    content:'_';
+    animation: blink-cursor 1s step-end infinite;
+    color: var(--green);
+  }
+  @keyframes blink-cursor{ 50%{ opacity:0; } }
+
+  .log-line{ animation: log-in 0.25s ease-out; }
+  @keyframes log-in{
+    from{ opacity:0; transform: translateX(6px); }
+    to{ opacity:1; transform: translateX(0); }
+  }
+
+  .btn-primary{
+    background: linear-gradient(180deg, rgba(0,255,159,0.15), rgba(0,255,159,0.05));
+    border: 1px solid var(--green);
+    color: var(--green);
+    transition: all 0.15s ease;
+    text-shadow: 0 0 6px rgba(0,255,159,0.6);
+    cursor: pointer;
+  }
+  .btn-primary:active{
+    background: var(--green);
+    color: #04060a;
+    box-shadow: 0 0 20px rgba(0,255,159,0.7);
+    text-shadow:none;
+  }
+
+  .title-grid-bg{
+    background-image:
+      linear-gradient(rgba(0,255,159,0.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,159,0.07) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+
+  /* Logo scales to fit any mobile viewport width — never clips */
+  .logo-text{
+    font-size: clamp(15px, 6.2vw, 26px);
+    white-space: nowrap;
+    display: block;
+    width: 100%;
+  }
+
+  .stat-tick{ font-variant-numeric: tabular-nums; }
+
+  .hidden{ display:none !important; }
+</style>
+</head>
+<body>
+<div id="root" class="w-full max-w-sm mx-auto px-2 overflow-x-hidden min-h-screen flex flex-col justify-between box-border relative bg-[var(--void)] font-mono select-none"></div>
+
+<script>
+/* ============================== SOUND ENGINE ============================== */
+class SoundEngine {
+  constructor(){
+    this.ctx = null;
+    this.master = null;
+    this.muted = false;
+  }
+  ensure(){
+    if(!this.ctx){
+      this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+      this.master = this.ctx.createGain();
+      this.master.gain.value = 0.5;
+      this.master.connect(this.ctx.destination);
+    }
+    if(this.ctx.state === 'suspended') this.ctx.resume();
+  }
+  setMuted(m){ this.muted = m; if(this.master) this.master.gain.value = m ? 0 : 0.5; }
+
+  click(){
+    this.ensure(); if(this.muted) return;
+    const t = this.ctx.currentTime;
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    osc.type = 'square';
+    osc.frequency.setValueAtTime(1800 + Math.random()*400, t);
+    osc.frequency.exponentialRampToValueAtTime(600, t+0.03);
+    gain.gain.setValueAtTime(0.12, t);
+    gain.gain.exponentialRampToValueAtTime(0.001, t+0.04);
+    osc.connect(gain); gain.connect(this.master);
+    osc.start(t); osc.stop(t+0.05);
+  }
+  error(){
+    this.ensure(); if(this.muted) return;
+    const t = this.ctx.currentTime;
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(180, t);
+    osc.frequency.linearRampToValueAtTime(80, t+0.15);
+    gain.gain.setValueAtTime(0.18, t);
+    gain.gain.exponentialRampToValueAtTime(0.001, t+0.18);
+    osc.connect(gain); gain.connect(this.master);
+    osc.start(t); osc.stop(t+0.2);
+  }
+  destroy(){
+    this.ensure(); if(this.muted) return;
+    const t = this.ctx.currentTime;
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(900, t);
+    osc.frequency.exponentialRampToValueAtTime(40, t+0.35);
+    gain.gain.setValueAtTime(0.22, t);
+    gain.gain.exponentialRampToValueAtTime(0.001, t+0.4);
+    osc.connect(gain); gain.connect(this.master);
+    osc.start(t); osc.stop(t+0.4);
+    const bufferSize = this.ctx.sampleRate * 0.15;
+    const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for(let i=0;i<bufferSize;i++){ data[i] = (Math.random()*2-1) * (1 - i/bufferSize); }
+    const noise = this.ctx.createBufferSource();
+    noise.buffer = buffer;
+    const nf = this.ctx.createBiquadFilter();
+    nf.type='lowpass'; nf.frequency.value = 2200;
+    const ng = this.ctx.createGain();
+    ng.gain.setValueAtTime(0.18, t);
+    ng.gain.exponentialRampToValueAtTime(0.001, t+0.15);
+    noise.connect(nf); nf.connect(ng); ng.connect(this.master);
+    noise.start(t);
+  }
+  alarm(){
+    this.ensure(); if(this.muted) return;
+    const t = this.ctx.currentTime;
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(740, t);
+    osc.frequency.linearRampToValueAtTime(940, t+0.12);
+    osc.frequency.linearRampToValueAtTime(740, t+0.24);
+    gain.gain.setValueAtTime(0.1, t);
+    gain.gain.linearRampToValueAtTime(0.001, t+0.26);
+    osc.connect(gain); gain.connect(this.master);
+    osc.start(t); osc.stop(t+0.27);
+  }
+  overdrive(){
+    this.ensure(); if(this.muted) return;
+    const t = this.ctx.currentTime;
+    [0,0.08,0.16].forEach((d,i)=>{
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(220 * (i+1), t+d);
+      gain.gain.setValueAtTime(0.1, t+d);
+      gain.gain.exponentialRampToValueAtTime(0.001, t+d+0.2);
+      osc.connect(gain); gain.connect(this.master);
+      osc.start(t+d); osc.stop(t+d+0.22);
+    });
+  }
+  hit(){
+    this.ensure(); if(this.muted) return;
+    const t = this.ctx.currentTime;
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(120, t);
+    osc.frequency.exponentialRampToValueAtTime(50, t+0.3);
+    gain.gain.setValueAtTime(0.3, t);
+    gain.gain.exponentialRampToValueAtTime(0.001, t+0.35);
+    osc.connect(gain); gain.connect(this.master);
+    osc.start(t); osc.stop(t+0.35);
+  }
+}
+const sound = new SoundEngine();
+
+/* ============================== WORD BANK ============================== */
+const WORDS_SHORT = ["data","core","byte","node","sync","grid","void","exec","pulse","logic","alpha","ghost","spike","crash","fault","input","cache","pixel","trace","vault"];
+const WORDS_MID = ["firewall","protocol","override","payload","kernel","cipher","matrix","render","circuit","upload","malware","gateway","binary","encrypt","virtual","sandbox","trojan","airgap","beacon","exploit"];
+const WORDS_LONG = ["mainframe","decryption","algorithm","biohazard","quarantine","subroutine","singularity","corruption","backdoor","blacksite","apocalypse","neuralnet","prototype","catastrophe","annihilate","obfuscate","resurrect","fragmented","detonation","unstoppable"];
+
+function pickWord(score){
+  let pool;
+  if(score < 300) pool = WORDS_SHORT;
+  else if(score < 1200) pool = [...WORDS_SHORT, ...WORDS_MID];
+  else if(score < 3000) pool = WORDS_MID;
+  else pool = [...WORDS_MID, ...WORDS_LONG];
+  return pool[Math.floor(Math.random()*pool.length)];
+}
+
+/* ============================== HIGH SCORES ============================== */
+let memoryScores = []; // fallback if localStorage unavailable in sandboxed iframe
+function loadScores(){
+  try{
+    const raw = localStorage.getItem('textapocalypse_scores');
+    return raw ? JSON.parse(raw) : [];
+  }catch(e){ return memoryScores; }
+}
+function saveScores(scores){
+  memoryScores = scores;
+  try{ localStorage.setItem('textapocalypse_scores', JSON.stringify(scores)); }catch(e){}
+}
+
+function escapeHtml(str){
+  return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+/* ============================== APP STATE / ROUTER ============================== */
+const root = document.getElementById('root');
+const LIVES_MAX = 3;
+const SPAWN_BASE_INTERVAL = 1700;
+
+const App = {
+  screen: 'title',
+  muted: false,
+  highScores: loadScores(),
+  finalStats: null,
+};
+
+function render(){
+  if(App.screen === 'title') renderTitle();
+  else if(App.screen === 'playing') renderGame();
+  else if(App.screen === 'gameover') renderGameOver();
+}
+
+/* ============================== TITLE SCREEN ============================== */
+function renderTitle(){
+  root.innerHTML = `
+    <div class="w-full flex-1 relative title-grid-bg flex flex-col items-center justify-center min-h-screen py-6">
+      <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[var(--void)]"></div>
+      <div class="scanline-overlay"></div>
+      <div class="vignette"></div>
+
+      <div class="absolute top-2 left-2 text-[8px] text-[var(--text-dim)] leading-tight z-10">
+        <div>SYS://TEXTAPOCALYPSE</div>
+        <div class="text-[var(--green)]">STATUS: <span class="terminal-cursor">STANDBY</span></div>
+      </div>
+      <div class="absolute top-2 right-2 text-[8px] text-[var(--text-dim)] text-right leading-tight z-10">
+        <div>RECORDS: ${App.highScores.length}</div>
+        <div>TOP: <span class="text-[var(--amber)]">${App.highScores[0] ? App.highScores[0].score.toLocaleString() : '---'}</span></div>
+      </div>
+
+      <div class="flex flex-col items-center gap-5 px-3 z-10 w-full">
+        <div class="relative glitch-wrap crt-flicker mt-4 w-full" style="max-width:100%; overflow:hidden;">
+          <h1 class="font-display font-black leading-none tracking-tight text-center text-[var(--green)] logo-text" style="text-shadow:0 0 20px rgba(0,255,159,0.6), 0 0 50px rgba(0,255,159,0.25)">
+            TEXTAPOCALYPSE
+          </h1>
+          <span class="glitch-layer c1 font-display font-black leading-none tracking-tight text-center logo-text">TEXTAPOCALYPSE</span>
+          <span class="glitch-layer c2 font-display font-black leading-none tracking-tight text-center logo-text">TEXTAPOCALYPSE</span>
+        </div>
+        <p class="text-[var(--cyan)] text-[10px] tracking-[0.3em] -mt-2 text-center">THE KEYBOARD IS YOUR ONLY WEAPON</p>
+
+        <div class="flex flex-col gap-2.5 w-full max-w-[280px]">
+          <button id="btn-start" class="btn-primary clip-corner px-6 py-3.5 font-display font-bold tracking-widest text-sm pulse-glow w-full">
+            &#9656; INITIALIZE CORE
+          </button>
+          <button id="btn-help" class="clip-corner-sm border border-[var(--text-dim)] text-[var(--text-dim)] active:text-[var(--cyan)] active:border-[var(--cyan)] px-4 py-3 text-[11px] tracking-widest transition-colors w-full">
+            CONTROLS / HELP
+          </button>
+          <button id="btn-mute" class="clip-corner-sm border border-[var(--text-dim)] text-[var(--text-dim)] active:text-[var(--amber)] active:border-[var(--amber)] px-4 py-3 text-[11px] transition-colors w-full">
+            ${App.muted ? '🔇 MUTED' : '🔊 AUDIO'}
+          </button>
+        </div>
+
+        <div class="flex flex-col items-center text-center text-[9px] gap-0.5 mt-3 text-[var(--text-dim)] tracking-widest">
+          <span>[ TYPE WORDS TO FIRE ]</span>
+          <span>[ TAB / ENTER = OVERDRIVE ]</span>
+          <span>[ SURVIVE THE WAVES ]</span>
+        </div>
+      </div>
+
+      <div id="tutorial-mount"></div>
+    </div>
+  `;
+
+  document.getElementById('btn-start').addEventListener('click', ()=>{
+    sound.ensure();
+    App.screen = 'playing';
+    render();
+  });
+  document.getElementById('btn-help').addEventListener('click', showTutorial);
+  document.getElementById('btn-mute').addEventListener('click', ()=>{
+    App.muted = !App.muted;
+    sound.setMuted(App.muted);
+    render();
+  });
+}
+
+function showTutorial(){
+  const mount = document.getElementById('tutorial-mount');
+  mount.innerHTML = `
+    <div class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-3">
+      <div class="hud-panel clip-corner w-full max-w-[340px] p-4 relative max-h-[90vh] overflow-y-auto">
+        <h2 class="font-display text-[var(--green)] text-sm tracking-widest mb-3">// FIELD MANUAL</h2>
+        <div class="space-y-3 text-[11px] text-gray-300">
+          <div class="flex gap-2">
+            <span class="text-[var(--cyan)] font-bold w-4 shrink-0">01</span>
+            <p>Data-blocks fall from the top. <span class="text-[var(--green)]">Type the word exactly</span> to destroy it before it reaches the bottom.</p>
+          </div>
+          <div class="flex gap-2">
+            <span class="text-[var(--cyan)] font-bold w-4 shrink-0">02</span>
+            <p>Typing the first letter <span class="text-[var(--cyan)]">locks your laser</span> onto that block. A typo while locked resets your streak.</p>
+          </div>
+          <div class="flex gap-2">
+            <span class="text-[var(--cyan)] font-bold w-4 shrink-0">03</span>
+            <p>Chain words to fill the <span class="text-[var(--purple)]">OVERDRIVE METER</span>. Full meter + <kbd class="px-1 py-0.5 bg-black border border-[var(--purple)] rounded text-[var(--purple)] text-[10px]">TAB</kbd>/<kbd class="px-1 py-0.5 bg-black border border-[var(--purple)] rounded text-[var(--purple)] text-[10px]">ENTER</kbd> = slow enemies 50%.</p>
+          </div>
+          <div class="flex gap-2">
+            <span class="text-[var(--cyan)] font-bold w-4 shrink-0">04</span>
+            <p>Block reaches the <span class="text-[var(--red)]">red zone</span> uncleared = breach, lose a life. Lose all lives, run ends.</p>
+          </div>
+        </div>
+        <button id="btn-close-tutorial" class="btn-primary clip-corner-sm w-full mt-4 py-2.5 font-display tracking-widest text-xs">
+          ACKNOWLEDGED — CLOSE
+        </button>
+      </div>
+    </div>
+  `;
+  document.getElementById('btn-close-tutorial').addEventListener('click', ()=>{ mount.innerHTML = ''; });
+}
+
+/* ============================== GAME SCREEN ============================== */
+function renderGame(){
+  root.innerHTML = `
+    <div class="w-full min-h-screen flex flex-col">
+
+      <!-- TOP: compact single-row status bar -->
+      <div id="status-bar" class="hud-panel clip-corner-sm px-2 py-1.5 flex items-center justify-between gap-1.5 text-[10px] shrink-0 z-20 mt-1">
+        <div class="flex items-center gap-1">
+          <span class="text-[var(--text-dim)]">SCR</span>
+          <span id="stat-score" class="font-display font-bold stat-tick" style="color:var(--amber); text-shadow:0 0 6px var(--amber)">0</span>
+        </div>
+        <div class="flex items-center gap-1">
+          <span class="text-[var(--text-dim)]">WV</span>
+          <span id="stat-wave" class="font-display font-bold stat-tick" style="color:var(--cyan); text-shadow:0 0 6px var(--cyan)">1</span>
+        </div>
+        <div class="flex items-center gap-1">
+          <span class="text-[var(--text-dim)]">x</span>
+          <span id="stat-mult" style="color:var(--green)">1.0</span>
+        </div>
+        <div id="lives-display" class="flex gap-1 shrink-0"></div>
+        <button id="btn-mute-ingame" class="text-[var(--text-dim)] active:text-[var(--green)] shrink-0 text-[12px] leading-none">
+          ${App.muted ? '🔇' : '🔊'}
+        </button>
+      </div>
+
+      <!-- Secondary compact stat strip -->
+      <div id="status-bar-2" class="flex items-center justify-between gap-1.5 text-[9px] text-[var(--text-dim)] px-1 py-1 shrink-0 tracking-widest">
+        <span>WPM <span id="stat-wpm" class="text-[var(--green)] stat-tick">0</span></span>
+        <span>ACC <span id="stat-accuracy" class="text-[var(--green)] stat-tick">100%</span></span>
+        <span>CHAIN <span id="stat-chain" class="text-[var(--green)] stat-tick">0</span></span>
+        <span id="stat-overdrive-label" class="text-[var(--purple)]">OD 0%</span>
+      </div>
+
+      <!-- Meters row -->
+      <div class="flex gap-1.5 px-1 pb-1 shrink-0">
+        <div class="flex-1 h-1.5 bg-black/60 border border-[var(--green-dim)] relative overflow-hidden clip-corner-sm">
+          <div id="meter-streak" class="h-full transition-all duration-150" style="width:0%; background: linear-gradient(90deg, #0a4a39, #00ff9f);"></div>
+        </div>
+        <div class="flex-1 h-1.5 bg-black/60 border border-[#3a1a5c] relative overflow-hidden clip-corner-sm">
+          <div id="meter-overdrive" class="h-full transition-all duration-150" style="width:0%; background: linear-gradient(90deg,#3a1a5c,#b026ff);"></div>
+        </div>
+      </div>
+      <div id="overdrive-ready-msg" class="text-[9px] text-[var(--purple)] text-center pulse-glow hidden mb-1">READY — PRESS TAB / ENTER</div>
+
+      <!-- CENTER: game board -->
+      <div id="canvas-wrap" class="relative overflow-hidden flex-1 w-full max-w-[360px] mx-auto border border-[var(--green-dim)] clip-corner-sm" style="min-height: 300px;">
+        <canvas id="game-canvas" class="absolute inset-0 w-full h-full"></canvas>
+        <div class="scanline-overlay"></div>
+        <div class="vignette"></div>
+        <div id="overdrive-banner" class="absolute top-2 left-1/2 -translate-x-1/2 px-2.5 py-1 bg-[var(--purple)]/20 border border-[var(--purple)] text-[var(--purple)] text-[9px] tracking-[0.2em] font-display pulse-glow z-30 hidden whitespace-nowrap">
+          &#9889; OVERDRIVE &#9889;
+        </div>
+      </div>
+
+      <!-- BOTTOM: input bar + instructions -->
+      <div class="shrink-0 py-2 px-1">
+        <div id="input-bar" class="relative flex items-center gap-2 px-3 py-2.5 clip-corner-sm border-2 border-[var(--green)] bg-black/60 transition-colors w-full max-w-[360px] mx-auto">
+          <span class="text-[var(--cyan)] text-[11px] tracking-widest">&gt;</span>
+          <span class="font-mono text-sm flex-1 min-h-[22px] truncate">
+            <span id="typed-display" class="text-[var(--cyan)]" style="text-shadow:0 0 6px var(--cyan)"></span>
+            <span id="remainder-display" class="text-gray-500"></span>
+            <span class="terminal-cursor"></span>
+          </span>
+          <span id="locked-badge" class="text-[8px] text-[var(--cyan)] tracking-widest border border-[var(--cyan)]/50 px-1.5 py-0.5 hidden shrink-0">LOCK</span>
+        </div>
+        <p class="text-center text-[8px] text-[var(--text-dim)] mt-1.5 tracking-widest px-2 leading-relaxed">JUST TYPE — TARGETING AUTOMATIC · TAB/ENTER = OVERDRIVE</p>
+      </div>
+    </div>
+  `;
+
+  const canvas = document.getElementById('game-canvas');
+  const ctx = canvas.getContext('2d');
+  const containerEl = document.getElementById('canvas-wrap');
+
+  /* ---------- mutable game state ---------- */
+  const state = {
+    enemies: [],
+    particles: [],
+    lockedId: null,
+    typed: '',
+    overdriveActive: false,
+    overdriveTime: 0,
+    overdriveMeter: 0,
+    score: 0,
+    lives: LIVES_MAX,
+    wave: 1,
+    streak: 0,
+    maxStreak: 0,
+    correctKeys: 0,
+    totalKeys: 0,
+    startTime: Date.now(),
+    wordsCompleted: 0,
+    shake: { x:0, y:0, t:0, intensity:0 },
+    nextSpawn: 0,
+    dims: { w: 360, h: 320 },
+    gameOverFired: false,
+    idCounter: 0,
+    inputFlash: 0,
+    logs: [{ id: 0, text: '[SYSTEM]: Core initialized.', tone:'sys' }],
+    logIdCounter: 1,
+  };
+
+  function pushLog(text, tone){
+    state.logIdCounter += 1;
+    state.logs.push({ id: state.logIdCounter, text, tone: tone || 'sys' });
+    if(state.logs.length > 25) state.logs.shift();
+  }
+
+  function triggerShake(intensity){
+    state.shake.intensity = Math.max(state.shake.intensity, intensity);
+    state.shake.t = 1;
+  }
+
+  function spawnParticles(x, y, count, color){
+    for(let i=0;i<count;i++){
+      const angle = Math.random() * Math.PI * 2;
+      const speed = 2 + Math.random()*5;
+      state.particles.push({
+        x, y, vx: Math.cos(angle)*speed, vy: Math.sin(angle)*speed,
+        life: 1, color, size: 2 + Math.random()*3
+      });
+    }
+  }
+
+  function spawnEnemy(){
+    const w = state.dims.w;
+    const word = pickWord(state.score);
+    const margin = 55;
+    const x = margin + Math.random() * Math.max(10, (w - margin*2));
+    const baseSpeed = 28 + Math.min(70, state.score / 40) + state.wave * 3;
+    state.idCounter += 1;
+    state.enemies.push({
+      id: state.idCounter,
+      word, x, y: -20,
+      speed: baseSpeed,
+      typedIdx: 0,
+      hitFlash: 0,
+    });
+  }
+
+  function destroyEnemy(id, success){
+    const idx = state.enemies.findIndex(e=>e.id===id);
+    if(idx === -1) return;
+    const en = state.enemies[idx];
+    if(success){
+      const wordLen = en.word.length;
+      const baseScore = wordLen * 15;
+      state.streak += 1;
+      state.maxStreak = Math.max(state.maxStreak, state.streak);
+      const multiplier = 1 + Math.min(state.streak * 0.1, 2);
+      const gained = Math.round(baseScore * multiplier);
+      const prevScore = state.score;
+      state.score += gained;
+      state.wordsCompleted += 1;
+      state.overdriveMeter = Math.min(100, state.overdriveMeter + (state.overdriveActive ? 0 : 14));
+      sound.destroy();
+      spawnParticles(en.x, en.y, state.overdriveActive ? 22 : 14, wordLen>=8 ? 'red' : 'green');
+      triggerShake(wordLen >= 8 ? 9 : 5.5);
+      if(state.streak > 0 && state.streak % 5 === 0){
+        pushLog(`[SYSTEM]: ${state.streak}x MULTI-KILL BONUS!`, 'good');
+      }
+      if(wordLen >= 9){
+        pushLog(`[SYSTEM]: HEAVY TARGET NEUTRALIZED — "${en.word.toUpperCase()}"`, 'good');
+      }
+      if(Math.floor(prevScore/500) !== Math.floor(state.score/500)){
+        state.wave += 1;
+        pushLog(`[SYSTEM]: WAVE ${state.wave} INCOMING`, 'wave');
+      }
+    }
+    state.enemies.splice(idx,1);
+    if(state.lockedId === id){
+      state.lockedId = null;
+      state.typed = '';
+    }
+  }
+
+  function breachCore(en){
+    state.lives -= 1;
+    sound.hit();
+    triggerShake(20);
+    state.streak = 0;
+    pushLog(`[CRITICAL]: CORE BREACH — "${en.word.toUpperCase()}"`, 'critical');
+    if(state.lockedId === en.id){
+      state.lockedId = null;
+      state.typed = '';
+    }
+    const idx = state.enemies.findIndex(e=>e.id===en.id);
+    if(idx!==-1) state.enemies.splice(idx,1);
+  }
+
+  function handleKeyDown(e){
+    if(document.getElementById('ad-modal-mount')) return; // modal open — ignore game input
+    if(e.key === 'Tab' || e.key === 'Enter'){
+      e.preventDefault();
+      if(state.overdriveMeter >= 100 && !state.overdriveActive){
+        state.overdriveActive = true;
+        state.overdriveTime = 8000;
+        state.overdriveMeter = 0;
+        sound.overdrive();
+        pushLog('[SYSTEM]: OVERDRIVE ENGAGED', 'overdrive');
+        triggerShake(14);
+      }
+      return;
+    }
+    if(e.key.length !== 1) return;
+    if(!/^[a-zA-Z]$/.test(e.key)) return;
+
+    e.preventDefault();
+    sound.ensure();
+    const key = e.key.toLowerCase();
+    state.totalKeys += 1;
+
+    let locked = state.lockedId != null ? state.enemies.find(en => en.id === state.lockedId) : null;
+
+    if(locked){
+      const expected = locked.word[locked.typedIdx];
+      if(key === expected){
+        locked.typedIdx += 1;
+        state.correctKeys += 1;
+        state.typed = locked.word.slice(0, locked.typedIdx);
+        sound.click();
+        if(state.overdriveActive){
+          spawnParticles(locked.x, locked.y, 5, 'purple');
+        }
+        if(locked.typedIdx >= locked.word.length){
+          destroyEnemy(locked.id, true);
+        }
+      } else {
+        sound.error();
+        state.streak = 0;
+        state.inputFlash = 10;
+        triggerShake(4);
+        pushLog(`[WARNING]: Input desync on "${locked.word.toUpperCase()}"`, 'warn');
+      }
+    } else {
+      const candidates = state.enemies.filter(en => en.word[0] === key).sort((a,b)=>b.y-a.y);
+      if(candidates.length > 0){
+        const target = candidates[0];
+        state.lockedId = target.id;
+        target.typedIdx = 1;
+        state.typed = target.word.slice(0,1);
+        state.correctKeys += 1;
+        sound.click();
+        if(target.typedIdx >= target.word.length){
+          destroyEnemy(target.id, true);
+        }
+      } else {
+        sound.error();
+        state.inputFlash = 10;
+      }
+    }
+  }
+
+  /* ---------- lives display ---------- */
+  function updateLivesDisplay(){
+    const el = document.getElementById('lives-display');
+    if(!el) return;
+    let html = '';
+    for(let i=0;i<LIVES_MAX;i++){
+      const alive = i < state.lives;
+      html += `<span class="text-[11px] ${alive ? 'text-[var(--green)]' : 'text-[var(--red)]/30'}">&#9829;</span>`;
+    }
+    el.innerHTML = html;
+  }
+  updateLivesDisplay();
+
+  /* ---------- HUD sync (DOM updates, throttled) ---------- */
+  function syncHud(){
+    const wpmEl = document.getElementById('stat-wpm');
+    if(!wpmEl) return; // screen changed
+    const elapsedMin = Math.max(0.02, (Date.now()-state.startTime)/60000);
+    const wpm = Math.round(state.wordsCompleted / elapsedMin);
+    const accuracy = state.totalKeys > 0 ? Math.round((state.correctKeys/state.totalKeys)*100) : 100;
+
+    wpmEl.textContent = wpm;
+    const accEl = document.getElementById('stat-accuracy');
+    accEl.textContent = accuracy + '%';
+    accEl.style.color = accuracy > 85 ? 'var(--green)' : accuracy > 60 ? 'var(--amber)' : 'var(--red)';
+
+    document.getElementById('stat-score').textContent = state.score.toLocaleString();
+    document.getElementById('stat-mult').textContent = (1+Math.min(state.streak*0.1,2)).toFixed(1);
+    document.getElementById('meter-streak').style.width = Math.min(100,(state.streak%20)*5) + '%';
+    const streakGlow = Math.min(1, state.streak / 20);
+    document.getElementById('meter-streak').style.boxShadow = `0 0 ${4+streakGlow*16}px rgba(0,255,159,${0.4+streakGlow*0.6})`;
+    document.getElementById('stat-chain').textContent = state.streak;
+
+    const odLabel = document.getElementById('stat-overdrive-label');
+    odLabel.textContent = state.overdriveActive ? 'OD ACTIVE' : 'OD ' + Math.round(state.overdriveMeter) + '%';
+    odLabel.style.color = state.overdriveActive ? 'var(--purple)' : 'var(--text-dim)';
+    const odMeter = document.getElementById('meter-overdrive');
+    odMeter.style.width = state.overdriveMeter + '%';
+    odMeter.style.background = state.overdriveActive
+      ? 'repeating-linear-gradient(135deg,#b026ff 0 8px,#ff00aa 8px 16px)'
+      : 'linear-gradient(90deg,#3a1a5c,#b026ff)';
+    odMeter.style.boxShadow = state.overdriveMeter>=100 ? '0 0 14px rgba(176,38,255,0.8)' : 'none';
+    document.getElementById('overdrive-ready-msg').classList.toggle('hidden', !(state.overdriveMeter >= 100 && !state.overdriveActive));
+
+    document.getElementById('stat-wave').textContent = state.wave;
+    updateLivesDisplay();
+
+    document.getElementById('overdrive-banner').classList.toggle('hidden', !state.overdriveActive);
+
+    const typedEl = document.getElementById('typed-display');
+    const remEl = document.getElementById('remainder-display');
+    const lockedBadge = document.getElementById('locked-badge');
+    const lockedEn = state.lockedId != null ? state.enemies.find(e=>e.id===state.lockedId) : null;
+    if(typedEl){
+      typedEl.textContent = state.typed;
+      remEl.textContent = lockedEn ? lockedEn.word.slice(state.typed.length) : '';
+      lockedBadge.classList.toggle('hidden', !lockedEn);
+    }
+
+    const inputBar = document.getElementById('input-bar');
+    if(inputBar){
+      if(state.inputFlash > 0){
+        inputBar.classList.add('flash-red');
+        inputBar.classList.add('bg-[var(--red)]/10');
+      } else {
+        inputBar.classList.remove('flash-red');
+        inputBar.classList.remove('bg-[var(--red)]/10');
+      }
+    }
+  }
+
+  /* ---------- canvas render ---------- */
+  function resize(){
+    const rect = containerEl.getBoundingClientRect();
+    state.dims = { w: rect.width, h: rect.height };
+    canvas.width = rect.width * devicePixelRatio;
+    canvas.height = rect.height * devicePixelRatio;
+    canvas.style.width = rect.width+'px';
+    canvas.style.height = rect.height+'px';
+    ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function colorFor(name){
+    switch(name){
+      case 'red': return '#ff1f4b';
+      case 'green': return '#00ff9f';
+      case 'purple': return '#b026ff';
+      default: return '#00ff9f';
+    }
+  }
+
+  function renderCanvas(){
+    const { w, h } = state.dims;
+    ctx.save();
+    ctx.translate(state.shake.x, state.shake.y);
+
+    const overdrive = state.overdriveActive;
+    const bgGrad = ctx.createLinearGradient(0,0,0,h);
+    if(overdrive){
+      bgGrad.addColorStop(0, '#1a0033');
+      bgGrad.addColorStop(1, '#04060a');
+    } else {
+      bgGrad.addColorStop(0, '#070b12');
+      bgGrad.addColorStop(1, '#04060a');
+    }
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(-20,-20,w+40,h+40);
+
+    ctx.strokeStyle = overdrive ? 'rgba(176,38,255,0.18)' : 'rgba(0,255,159,0.07)';
+    ctx.lineWidth = 1;
+    const gridSize = 26;
+    for(let x=0;x<w;x+=gridSize){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,h); ctx.stroke(); }
+    for(let y=0;y<h;y+=gridSize){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y); ctx.stroke(); }
+
+    const critY = h*0.76;
+    const critGrad = ctx.createLinearGradient(0,critY,0,h);
+    critGrad.addColorStop(0, 'rgba(255,31,75,0)');
+    critGrad.addColorStop(1, 'rgba(255,31,75,0.22)');
+    ctx.fillStyle = critGrad;
+    ctx.fillRect(0,critY,w,h-critY);
+    ctx.strokeStyle = 'rgba(255,31,75,0.5)';
+    ctx.setLineDash([6,5]);
+    ctx.beginPath(); ctx.moveTo(0,critY); ctx.lineTo(w,critY); ctx.stroke();
+    ctx.setLineDash([]);
+
+    const lockedId = state.lockedId;
+    state.enemies.forEach(en=>{
+      const depthRatio = en.y / h;
+      let color, glow;
+      if(depthRatio < 0.4){ color = '#00ff9f'; glow = 'rgba(0,255,159,0.5)'; }
+      else if(depthRatio < 0.72){ color = '#ffb800'; glow = 'rgba(255,184,0,0.55)'; }
+      else { color = '#ff1f4b'; glow = 'rgba(255,31,75,0.8)'; }
+
+      const isLocked = en.id === lockedId;
+      const flashing = depthRatio >= 0.72;
+      const flashAlpha = flashing ? (0.6 + 0.4*Math.sin(performance.now()/80)) : 1;
+
+      ctx.font = `bold ${overdrive ? 13:12}px 'JetBrains Mono', monospace`;
+      const textW = ctx.measureText(en.word).width;
+      const padX = 9;
+      const boxW = textW + padX*2;
+      const boxH = 22;
+      const bx = en.x - boxW/2, by = en.y - boxH/2;
+
+      ctx.save();
+      ctx.globalAlpha = flashAlpha;
+
+      ctx.fillStyle = 'rgba(4,6,10,0.82)';
+      ctx.fillRect(bx,by,boxW,boxH);
+
+      ctx.shadowColor = glow;
+      ctx.shadowBlur = isLocked ? 16 : 7;
+      ctx.strokeStyle = isLocked ? '#00d4ff' : color;
+      ctx.lineWidth = isLocked ? 2 : 1.2;
+      ctx.strokeRect(bx,by,boxW,boxH);
+      ctx.shadowBlur = 0;
+
+      const tick = 4;
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 1;
+      [[bx,by,1,1],[bx+boxW,by,-1,1],[bx,by+boxH,1,-1],[bx+boxW,by+boxH,-1,-1]].forEach(([cx,cy,dx,dy])=>{
+        ctx.beginPath();
+        ctx.moveTo(cx, cy+tick*dy); ctx.lineTo(cx,cy); ctx.lineTo(cx+tick*dx,cy);
+        ctx.stroke();
+      });
+
+      const typedPart = en.word.slice(0, en.typedIdx);
+      const restPart = en.word.slice(en.typedIdx);
+      ctx.textBaseline = 'middle';
+      let tx = bx + padX;
+      const ty = by + boxH/2 + 1;
+      if(typedPart){
+        ctx.fillStyle = '#00d4ff';
+        ctx.fillText(typedPart, tx, ty);
+        tx += ctx.measureText(typedPart).width;
+      }
+      ctx.fillStyle = flashing ? '#fff' : '#cfe8e0';
+      ctx.fillText(restPart, tx, ty);
+
+      ctx.restore();
+    });
+
+    if(lockedId != null){
+      const target = state.enemies.find(e=>e.id===lockedId);
+      if(target){
+        const originX = w/2, originY = h - 4;
+        ctx.save();
+        ctx.strokeStyle = '#00d4ff';
+        ctx.lineWidth = 1.5;
+        ctx.shadowColor = '#00d4ff';
+        ctx.shadowBlur = 10;
+        ctx.globalAlpha = 0.75 + 0.25*Math.sin(performance.now()/60);
+        ctx.beginPath();
+        ctx.moveTo(originX, originY);
+        ctx.lineTo(target.x, target.y);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(target.x, target.y, 3, 0, Math.PI*2);
+        ctx.fillStyle = '#00d4ff';
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    state.particles.forEach(p=>{
+      ctx.save();
+      ctx.globalAlpha = Math.max(0,p.life);
+      ctx.fillStyle = colorFor(p.color);
+      ctx.shadowColor = ctx.fillStyle;
+      ctx.shadowBlur = 6;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
+      ctx.fill();
+      ctx.restore();
+    });
+
+    if(overdrive){
+      ctx.save();
+      ctx.globalAlpha = 0.12 + 0.08*Math.sin(performance.now()/100);
+      const g = ctx.createRadialGradient(w/2,h/2,h*0.2,w/2,h/2,h*0.9);
+      g.addColorStop(0,'rgba(176,38,255,0)');
+      g.addColorStop(1,'rgba(176,38,255,0.5)');
+      ctx.fillStyle = g;
+      ctx.fillRect(0,0,w,h);
+      ctx.restore();
+    }
+
+    ctx.restore();
+  }
+
+  /* ---------- main loop ---------- */
+  let raf;
+  let lastFrame = performance.now();
+  let lastHudUpdate = 0;
+  let alarmCooldown = 0;
+  let active = true;
+
+  function loop(now){
+    if(!active) return;
+    const dt = Math.min(48, now - lastFrame);
+    lastFrame = now;
+    const { w, h } = state.dims;
+
+    if(state.overdriveActive){
+      state.overdriveTime -= dt;
+      if(state.overdriveTime <= 0){
+        state.overdriveActive = false;
+        pushLog('[SYSTEM]: Overdrive depleted.', 'sys');
+      }
+    }
+
+    state.nextSpawn -= dt;
+    if(state.nextSpawn <= 0){
+      spawnEnemy();
+      const interval = Math.max(550, SPAWN_BASE_INTERVAL - state.wave*70 - state.score*0.15);
+      state.nextSpawn = interval;
+    }
+
+    const speedMul = state.overdriveActive ? 0.5 : 1;
+    let nearCritical = false;
+    for(let i=state.enemies.length-1; i>=0; i--){
+      const en = state.enemies[i];
+      en.y += en.speed * speedMul * (dt/1000);
+      if(en.hitFlash > 0) en.hitFlash -= dt;
+      const depthRatio = en.y / h;
+      if(depthRatio > 0.72) nearCritical = true;
+      if(en.y > h - 6){
+        breachCore(en);
+      }
+    }
+    if(nearCritical){
+      alarmCooldown -= dt;
+      if(alarmCooldown <= 0){ sound.alarm(); alarmCooldown = 1100; }
+    }
+
+    for(let i=state.particles.length-1;i>=0;i--){
+      const p = state.particles[i];
+      p.x += p.vx; p.y += p.vy;
+      p.vy += 0.12;
+      p.life -= 0.025;
+      if(p.life <= 0) state.particles.splice(i,1);
+    }
+
+    if(state.inputFlash > 0) state.inputFlash -= 1;
+
+    if(state.shake.t > 0){
+      state.shake.t -= dt/180;
+      if(state.shake.t < 0) state.shake.t = 0;
+      const i = state.shake.intensity * state.shake.t;
+      state.shake.x = (Math.random()*2-1) * i;
+      state.shake.y = (Math.random()*2-1) * i;
+    } else {
+      state.shake.x = 0; state.shake.y = 0;
+    }
+
+    if(state.lives <= 0 && !state.gameOverFired){
+      state.gameOverFired = true;
+
+      const elapsedMin = Math.max(0.05, (Date.now()-state.startTime)/60000);
+      const wpm = Math.round(state.wordsCompleted / elapsedMin);
+      const accuracy = state.totalKeys > 0 ? Math.round((state.correctKeys/state.totalKeys)*100) : 100;
+
+      window.removeEventListener('resize', resize);
+      window.removeEventListener('keydown', handleKeyDown);
+      App.finalStats = {
+        score: state.score, wpm, accuracy,
+        wave: state.wave, maxStreak: state.maxStreak,
+        wordsCompleted: state.wordsCompleted
+      };
+      const newScores = [...App.highScores, { score: state.score, wpm, wave: state.wave, date: Date.now() }]
+        .sort((a,b)=>b.score-a.score).slice(0,8);
+      App.highScores = newScores;
+      saveScores(newScores);
+      App.screen = 'gameover';
+      render();
+      return;
+    }
+
+    renderCanvas();
+    if(now - lastHudUpdate > 90){
+      lastHudUpdate = now;
+      syncHud();
+    }
+
+    raf = requestAnimationFrame(loop);
+  }
+
+  window.addEventListener('keydown', handleKeyDown);
+  raf = requestAnimationFrame(loop);
+}
+
+/* ============================== GAME OVER SCREEN ============================== */
+function renderGameOver(){
+  const stats = App.finalStats;
+  if(!stats){ App.screen = 'title'; render(); return; }
+  const rank = App.highScores.findIndex(s => s.score === stats.score && s.wave === stats.wave) + 1;
+
+  root.innerHTML = `
+    <div class="w-full min-h-screen title-grid-bg flex flex-col items-center justify-center relative py-6">
+      <div class="scanline-overlay"></div>
+      <div class="vignette"></div>
+      <div class="absolute inset-0 bg-gradient-to-b from-[var(--red)]/5 via-transparent to-[var(--void)]"></div>
+
+      <div class="hud-panel clip-corner p-4 w-full max-w-[340px] relative z-10">
+        <div class="flex items-center gap-2 mb-1">
+          <div class="w-1.5 h-1.5 bg-[var(--red)] blink-red" style="box-shadow:0 0 6px var(--red)"></div>
+          <span class="text-[9px] text-[var(--red)] tracking-[0.25em]">CORE OFFLINE</span>
+        </div>
+        <h1 class="font-display font-black text-lg text-[var(--red)] tracking-tight mb-1" style="text-shadow:0 0 18px rgba(255,31,75,0.6)">
+          SYSTEM FAILURE
+        </h1>
+        <p class="text-[var(--text-dim)] text-[9px] tracking-widest mb-4">// DIAGNOSTIC REPORT</p>
+
+        <div class="grid grid-cols-2 gap-2 mb-4">
+          ${diagStatHtml('SCORE', stats.score.toLocaleString(), 'var(--amber)', true)}
+          ${diagStatHtml('WPM', stats.wpm, 'var(--green)')}
+          ${diagStatHtml('ACCURACY', stats.accuracy + '%', 'var(--cyan)')}
+          ${diagStatHtml('WAVES', stats.wave, 'var(--purple)')}
+          ${diagStatHtml('MAX STREAK', stats.maxStreak, 'var(--green)')}
+          ${diagStatHtml('WORDS', stats.wordsCompleted, 'var(--cyan)')}
+        </div>
+
+        ${rank > 0 && rank <= 8 ? `
+          <div class="mb-4 px-3 py-2 border border-[var(--amber)] bg-[var(--amber)]/10 text-[var(--amber)] text-[10px] tracking-widest clip-corner-sm text-center">
+            &#9733; NEW RECORD — RANK #${rank}
+          </div>
+        ` : ''}
+
+        <div class="flex flex-col gap-2 w-full">
+          <button id="btn-restart" class="btn-primary clip-corner w-full py-3 font-display font-bold tracking-widest text-sm pulse-glow">
+            &#9656; RESTART RUN
+          </button>
+          <button id="btn-title" class="clip-corner-sm border border-[var(--text-dim)] text-[var(--text-dim)] active:text-white active:border-white px-4 py-3 text-[11px] tracking-widest transition-colors w-full">
+            TITLE SCREEN
+          </button>
+        </div>
+        <p class="text-center text-[9px] text-[var(--text-dim)] mt-3 tracking-widest">PRESS ENTER TO RESTART</p>
+      </div>
+    </div>
+  `;
+
+  function restart(){
+    window.removeEventListener('keydown', enterHandler);
+    App.screen = 'playing';
+    render();
+  }
+  function enterHandler(e){
+    if(e.key === 'Enter') restart();
+  }
+
+  document.getElementById('btn-restart').addEventListener('click', restart);
+  document.getElementById('btn-title').addEventListener('click', ()=>{
+    window.removeEventListener('keydown', enterHandler);
+    App.screen = 'title';
+    render();
+  });
+  window.addEventListener('keydown', enterHandler);
+}
+
+function diagStatHtml(label, value, color, big){
+  return `
+    <div class="border border-white/10 bg-black/30 p-2 clip-corner-sm">
+      <div class="text-[8px] text-[var(--text-dim)] tracking-widest mb-0.5">${label}</div>
+      <div class="font-display font-bold ${big ? 'text-xl':'text-base'}" style="color:${color}; text-shadow:0 0 8px ${color}">${value}</div>
+    </div>
+  `;
+}
+
+/* ============================== SIMPLE RESTART SCREEN ============================== */
+/* Plain full-screen restart prompt. No ad logic, no AdMob, no async calls —
+   just a button that reloads the page. Kept intentionally minimal. */
+function renderRestartScreen(){
+  root.innerHTML = `
+    <div class="w-full min-h-screen flex flex-col items-center justify-center px-4 bg-[var(--void)]">
+      <div class="hud-panel clip-corner w-full max-w-[320px] p-5 text-center">
+        <h1 class="font-display font-black text-lg text-[var(--green)] tracking-tight mb-2" style="text-shadow:0 0 16px rgba(0,255,159,0.5)">
+          RUN ENDED
+        </h1>
+        <p class="text-[11px] text-[var(--text-dim)] tracking-widest mb-5">// PRESS RESTART TO BEGIN AGAIN</p>
+        <button id="btn-simple-restart" class="btn-primary clip-corner w-full py-3 font-display font-bold tracking-widest text-sm pulse-glow">
+          &#9656; RESTART
+        </button>
+      </div>
+    </div>
+  `;
+  document.getElementById('btn-simple-restart').addEventListener('click', ()=>{
+    location.reload();
+  });
+}
+
+/* ============================== AD LAUNCHER (now ad-free) ============================== */
+/* AdMob was removed entirely — no plugin calls, no async ad lifecycle,
+   nothing that can throw or crash. This just hands off to the plain restart screen. */
+function launchAd(){
+  renderRestartScreen();
+}
+
+/* ============================== BOOT ============================== */
+render();
+</script>
+</body>
+</html>
